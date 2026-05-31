@@ -25,7 +25,7 @@ export default function AppLayout() {
               <ModeToggle />
             </div>
           </header>
-          <main className="p-6">
+          <main className="p-6 max-md:px-3">
             <Outlet />
           </main>
         </SidebarInset>

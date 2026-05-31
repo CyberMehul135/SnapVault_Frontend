@@ -21,7 +21,7 @@ export default function AlbumCard({ album, cardOptions = true }) {
       className="group mx-auto w-full max-w-sm rounded-2xl overflow-hidden gap-0 pb-0 pt-0 cursor-pointer shadow-sm hover:shadow-lg transition-all duration-300"
       onClick={() => navigate(`/albums/${album._id}`)}
     >
-      <div className="relative h-44 w-full overflow-hidden">
+      <div className="relative h-44 max-sm:h-28 w-full overflow-hidden">
         <img
           src={album.coverImage}
           alt="Event cover"

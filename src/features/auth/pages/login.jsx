@@ -40,7 +40,7 @@ export default function Login() {
             className="bg-blue-500 mx-auto box-content p-3 rounded-3xl text-white"
           />
           <CardTitle className="text-center text-2xl font-bold">
-            KaviosPix
+            SnapVault
           </CardTitle>
           <CardDescription className="text-center text-sm">
             Your memories, beautifully organized

@@ -34,7 +34,7 @@ export function AppSidebar() {
               <div className="bg-blue-600 size-8 flex justify-center items-center rounded-full">
                 <Photos />
               </div>
-              <span className="text-lg font-medium">KaviosPix</span>
+              <span className="text-lg font-medium">SnapVault</span>
             </Link>
           </SidebarMenuItem>
         </SidebarMenu>

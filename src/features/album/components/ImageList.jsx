@@ -52,7 +52,7 @@ export default function ImageList({ data, loading, err, albumId }) {
     return (
       <>
         {data.data?.images && data.data?.images?.length > 0 ? (
-          <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+          <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
             {data.data.images?.map((image) => (
               <div
                 key={image._id}
@@ -69,7 +69,7 @@ export default function ImageList({ data, loading, err, albumId }) {
                   className="w-full rounded-xl hover:scale-105 transition duration-300"
                 />
                 <Star
-                  className={`absolute bottom-2 left-3 hidden group-hover:block box-content p-1.25 rounded-xl bg-gray-800 ${
+                  className={`absolute bottom-2 left-3 hidden max-md:block group-hover:block box-content p-1.25 rounded-xl bg-gray-800 ${
                     image.isFavourite
                       ? "text-yellow-500 fill-yellow-500"
                       : "text-white fill-none"
@@ -78,7 +78,7 @@ export default function ImageList({ data, loading, err, albumId }) {
                   onClick={(e) => handleLikeImage(e, image._id)}
                 />
                 <Trash2
-                  className="absolute top-2 right-3 hidden group-hover:block bg-accent/80 box-content p-1.5 rounded-2xl hover:bg-chart-5/80"
+                  className="absolute top-2 right-3 hidden max-md:block group-hover:block bg-accent/80 box-content p-1.5 rounded-2xl hover:bg-chart-5/80"
                   size={14}
                   onClick={(e) => handleDeleteImage(e, image._id)}
                 />
