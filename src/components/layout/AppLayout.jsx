@@ -22,7 +22,6 @@ export default function AppLayout() {
             <SidebarTrigger className="-ml-1 text-muted-foreground cursor-pointer" />
             <div className="flex items-center gap-4">
               <AccountOptions />
-              <ModeToggle />
             </div>
           </header>
           <main className="p-6 max-md:px-3">
