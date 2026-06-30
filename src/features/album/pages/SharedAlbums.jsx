@@ -10,8 +10,6 @@ export default function SharedAlbums() {
     staleTime: 10000,
   });
 
-  console.log(data);
-
   return (
     <>
       <Header

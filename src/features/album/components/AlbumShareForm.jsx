@@ -27,6 +27,7 @@ export function AlbumShareForm() {
 
   // local-state
   const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState({});
 
   // Tanstack
   const queryClient = useQueryClient();
@@ -39,17 +40,41 @@ export function AlbumShareForm() {
         position: "bottom-right",
       });
     },
+    onError: (err) => {
+      toast.error(err?.response?.data?.message, { position: "top-right" });
+    },
   });
 
   const handleShareAlbumFormSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!email) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(email.trim())) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     mutation.mutate({ albumId, emails: [email] });
   };
 
   return (
     <Dialog
       open={isShareAlbumFormOpen}
-      onOpenChange={(value) => dispatch(setShareAlbumOpen({ isOpen: value }))}
+      onOpenChange={(value) => {
+        dispatch(setShareAlbumOpen({ isOpen: value }));
+        if (!value) {
+          setEmail("");
+          setErrors({});
+        }
+      }}
     >
       <DialogContent className="sm:max-w-sm">
         <form onSubmit={handleShareAlbumFormSubmit}>
@@ -70,6 +95,9 @@ export function AlbumShareForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+              {errors.email && (
+                <p className="text-red-500 text-xs ml-1">{errors.email}</p>
+              )}
             </Field>
 
             {sharedUsers && sharedUsers.length > 0 && (

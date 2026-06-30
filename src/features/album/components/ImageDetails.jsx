@@ -15,7 +15,6 @@ import { toast } from "sonner";
 
 export default function ImageDetails({ currentImage, data }) {
   const { albumId, imageId } = useParams();
-  console.log(currentImage);
 
   const [openPersonInput, setOpenPersonInput] = useState(false);
   const [tag, setTag] = useState("");

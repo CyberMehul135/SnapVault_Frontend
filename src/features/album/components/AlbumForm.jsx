@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { createAlbum } from "@/features/album/album.service";
 import { setCreateAlbumOpen } from "@/features/album/albumSlice";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "sonner";
 
@@ -28,6 +28,13 @@ export function AlbumForm() {
   const [description, setDescription] = useState("");
   const [coverImage, setCoverImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (errors.length > 0) {
+      setErrors({});
+    }
+  }, [errors]);
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -39,10 +46,16 @@ export function AlbumForm() {
         position: "bottom-right",
       });
     },
+    onError: (err) => {
+      toast.error(err?.response?.data?.message, { position: "top-right" });
+    },
   });
 
   const handleAlbumFormSubmit = async (e) => {
     e.preventDefault();
+
+    const isValid = validationAlbumForm();
+    if (!isValid) return;
 
     const albumData = new FormData();
     albumData.append("name", name);
@@ -52,10 +65,39 @@ export function AlbumForm() {
     mutation.mutate(albumData);
   };
 
+  const validationAlbumForm = () => {
+    const newErrors = {};
+
+    if (!name) {
+      newErrors.name = "Album name is required";
+    }
+
+    if (!description) {
+      newErrors.description = "Description is required";
+    }
+
+    if (!coverImage) {
+      newErrors.coverImage = "Cover image is required";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   return (
     <Dialog
       open={isCreateAlbumFormOpen}
-      onOpenChange={(value) => dispatch(setCreateAlbumOpen(value))}
+      onOpenChange={(value) => {
+        dispatch(setCreateAlbumOpen(value));
+        if (!value) {
+          setName("");
+          setDescription("");
+          setCoverImage(null);
+          setPreview(null);
+          setErrors({});
+        }
+      }}
     >
       <DialogContent className="sm:max-w-sm">
         <form onSubmit={handleAlbumFormSubmit}>
@@ -85,6 +127,9 @@ export function AlbumForm() {
                   />
                 )}
               </label>
+              {errors.coverImage && (
+                <p className="text-red-500 text-[12px]">{errors.coverImage}</p>
+              )}
             </Field>
 
             <Field className="gap-1">
@@ -99,6 +144,9 @@ export function AlbumForm() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
+              {errors.name && (
+                <p className="text-red-500 text-[12px]">{errors.name}</p>
+              )}
             </Field>
 
             <Field className="gap-1">
@@ -113,6 +161,9 @@ export function AlbumForm() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
+              {errors.description && (
+                <p className="text-red-500 text-[12px]">{errors.description}</p>
+              )}
             </Field>
           </FieldGroup>
 

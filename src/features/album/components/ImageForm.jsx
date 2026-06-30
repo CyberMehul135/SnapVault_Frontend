@@ -17,6 +17,7 @@ import { CloudUpload } from "lucide-react";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function ImageForm() {
   const { albumId } = useParams();
@@ -27,6 +28,7 @@ export default function ImageForm() {
   // local-state
   const [imageUrl, setImageUrl] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
 
   // Tanstack
   const queryClient = useQueryClient();
@@ -37,10 +39,24 @@ export default function ImageForm() {
       queryClient.invalidateQueries({ queryKey: ["photos"] });
       dispatch(setCreateImageFormOpen());
     },
+    onError: (err) => {
+      toast.error(err?.response?.data?.message, { position: "top-right" });
+    },
   });
 
   const handleImageFormSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {};
+
+    if (!imageUrl) {
+      newErrors.imageUrl = "Image is required";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setFormErrors(newErrors);
+      return;
+    }
 
     const imageData = new FormData();
     imageData.append("image", imageUrl);
@@ -51,7 +67,12 @@ export default function ImageForm() {
   return (
     <Dialog
       open={isCreateImageFormOpen}
-      onOpenChange={(value) => dispatch(setCreateImageFormOpen(value))}
+      onOpenChange={(value) => {
+        dispatch(setCreateImageFormOpen(value));
+        setFormErrors({});
+        setImageUrl(null);
+        setPreview(null);
+      }}
     >
       <DialogContent className="sm:max-w-sm">
         <form onSubmit={handleImageFormSubmit}>
@@ -85,6 +106,11 @@ export default function ImageForm() {
                   />
                 )}
               </label>
+              {formErrors?.imageUrl && (
+                <p className="text-red-500 text-sm ml-1">
+                  {formErrors?.imageUrl}
+                </p>
+              )}
             </Field>
           </FieldGroup>
 
